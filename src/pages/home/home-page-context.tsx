@@ -132,117 +132,117 @@ export function useHomePageState() {
 	}
 
 	/** Websocket (TODO Delete this) */
-	const socketRef = useRef<WebSocket | null>(null)
-	const retryCountRef = useRef(0)
-	const maxRetries = 3
+	// const socketRef = useRef<WebSocket | null>(null)
+	// const retryCountRef = useRef(0)
+	// const maxRetries = 3
 
-	useEffect(() => {
-		if (!user?.id) return
+	// useEffect(() => {
+	// 	if (!user?.id) return
 
-		const token = getCookie("token")
-		let isMounted = true
+	// 	const token = getCookie("token")
+	// 	let isMounted = true
 
-		const connect = () => {
-			const wsUrl = `${WS_URL}${ENDPOINT.ws_chat}/${user.id}?token=${encodeURIComponent(token!)}`
-			const ws = new WebSocket(wsUrl)
+	// 	const connect = () => {
+	// 		const wsUrl = `${WS_URL}${ENDPOINT.ws_chat}/${user.id}?token=${encodeURIComponent(token!)}`
+	// 		const ws = new WebSocket(wsUrl)
 
-			socketRef.current = ws
+	// 		socketRef.current = ws
 
-			ws.onopen = () => {
-				// console.log("WebSocket connected ✅")
-				retryCountRef.current = 0
-			}
+	// 		ws.onopen = () => {
+	// 			// console.log("WebSocket connected ✅")
+	// 			retryCountRef.current = 0
+	// 		}
 
-			ws.onclose = () => {
-				// console.log("WebSocket disconnected 🔌")
+	// 		ws.onclose = () => {
+	// 			// console.log("WebSocket disconnected 🔌")
 
-				if (!isMounted) return
+	// 			if (!isMounted) return
 
-				if (retryCountRef.current < maxRetries) {
-					retryCountRef.current += 1
-					// console.log(`Retrying... (${retryCountRef.current})`)
+	// 			if (retryCountRef.current < maxRetries) {
+	// 				retryCountRef.current += 1
+	// 				// console.log(`Retrying... (${retryCountRef.current})`)
 
-					setTimeout(() => {
-						connect()
-					}, 2000)
-				} else {
-					// console.log("Max retry reached ❌")
-				}
-			}
+	// 				setTimeout(() => {
+	// 					connect()
+	// 				}, 2000)
+	// 			} else {
+	// 				// console.log("Max retry reached ❌")
+	// 			}
+	// 		}
 
-			ws.onerror = (error) => {
-				console.error("WebSocket error", error)
-				ws.close()
-			}
+	// 		ws.onerror = (error) => {
+	// 			console.error("WebSocket error", error)
+	// 			ws.close()
+	// 		}
 
-			ws.onmessage = (event) => {
-				handleWebsocketMessage(event)
-			}
-		}
+	// 		ws.onmessage = (event) => {
+	// 			handleWebsocketMessage(event)
+	// 		}
+	// 	}
 
-		connect()
+	// 	connect()
 
-		return () => {
-			isMounted = false
+	// 	return () => {
+	// 		isMounted = false
 
-			if (socketRef.current) {
-				// console.log("Cleaning up WebSocket 🧹")
-				socketRef.current.close()
-			}
-		}
-	}, [user?.id])
+	// 		if (socketRef.current) {
+	// 			// console.log("Cleaning up WebSocket 🧹")
+	// 			socketRef.current.close()
+	// 		}
+	// 	}
+	// }, [user?.id])
 
-	function handleWebsocketMessage(event: MessageEvent) {
-		try {
-			const payload = JSON.parse(event.data)
+	// function handleWebsocketMessage(event: MessageEvent) {
+	// 	try {
+	// 		const payload = JSON.parse(event.data)
 
-			if (payload?.action === "reload_history") {
-				// console.log("Trigger reload history 🚀")
-				chatbot.loadChatSessions()
-			} else if (payload?.action == "update_history") {
-				chatbot.setChatSessions((prev) =>
-					prev.map((session) =>
-						session.id === payload.session_id
-							? { ...session, title: payload.title }
-							: session
-					)
-				)
-			} else if (payload?.action == "update_message") {
-				// console.log(payload)
+	// 		if (payload?.action === "reload_history") {
+	// 			// console.log("Trigger reload history 🚀")
+	// 			chatbot.loadChatSessions()
+	// 		} else if (payload?.action == "update_history") {
+	// 			chatbot.setChatSessions((prev) =>
+	// 				prev.map((session) =>
+	// 					session.id === payload.session_id
+	// 						? { ...session, title: payload.title }
+	// 						: session
+	// 				)
+	// 			)
+	// 		} else if (payload?.action == "update_message") {
+	// 			// console.log(payload)
 
-				setChatSession((prev) => {
-					if (!prev) return prev
+	// 			setChatSession((prev) => {
+	// 				if (!prev) return prev
 
-					if (prev.id !== payload.session_id) return prev
+	// 				if (prev.id !== payload.session_id) return prev
 
-					return {
-						...prev,
-						is_thinking: false,
-						messages: [
-							...prev.messages,
-							{
-								content: payload.message,
-								role: "assistant",
-								id: payload.message_id,
-								session_id: prev.id,
-								created_at: "",
-							},
-						],
-					}
-				})
-			} else if (payload?.action == "update_thinking") {
-				// console.log(payload)
-				// console.log(chatbot.activeHistoryIdRef.current)
+	// 				return {
+	// 					...prev,
+	// 					is_thinking: false,
+	// 					messages: [
+	// 						...prev.messages,
+	// 						{
+	// 							content: payload.message,
+	// 							role: "assistant",
+	// 							id: payload.message_id,
+	// 							session_id: prev.id,
+	// 							created_at: "",
+	// 						},
+	// 					],
+	// 				}
+	// 			})
+	// 		} else if (payload?.action == "update_thinking") {
+	// 			// console.log(payload)
+	// 			// console.log(chatbot.activeHistoryIdRef.current)
 
-				if (chatbot.activeHistoryIdRef.current == payload?.session_id) {
-					setThinkingText(payload?.text)
-				}
-			}
-		} catch (error) {
-			console.error("Invalid JSON payload:", event.data)
-		}
+	// 			if (chatbot.activeHistoryIdRef.current == payload?.session_id) {
+	// 				setThinkingText(payload?.text)
+	// 			}
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Invalid JSON payload:", event.data)
+	// 	}
 
-	}
+	// }
 
 	return {
 		isLoading,
