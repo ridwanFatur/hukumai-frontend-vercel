@@ -1,5 +1,5 @@
 import { createChatSessionApi, getChatSessionDetailApi, sendMessageApi } from "@/api/chat-session-api";
-import { useGlobal } from "@/global-context/global";
+// import { useGlobal } from "@/global-context/global";
 import { useMainLayout } from "@/layouts/main/main-layout-context";
 import type { ChatSessionDetail } from "@/models/ChatSession";
 import {
@@ -10,8 +10,8 @@ import {
 	useState,
 	type ReactNode,
 } from "react"
-import { ENDPOINT, WS_URL } from "@/utils/api-constants"
-import { getCookie } from "@/utils/cookie-helper"
+// import { ENDPOINT, WS_URL } from "@/utils/api-constants"
+// import { getCookie } from "@/utils/cookie-helper"
 import { useToast } from "@/global-context/toast";
 
 export function useHomePageState() {
@@ -22,7 +22,7 @@ export function useHomePageState() {
 	const [isLoadingMessages, setIsLoadingMessages] = useState(false);
 	const [chatSession, setChatSession] = useState<ChatSessionDetail>()
 	const [thinkingText, setThinkingText] = useState<string | undefined>()
-	const { user } = useGlobal()
+	// const { user } = useGlobal()
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const { toast } = useToast();
 
