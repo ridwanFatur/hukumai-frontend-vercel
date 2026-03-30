@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Background square -->
+  <rect width="64" height="64" rx="12" fill="#1A0E2B"/>
+  
+  <!-- Elegant H -->
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
+        font-family="Georgia, serif" font-size="36" font-weight="bold"
+        fill="url(#grad1)">
+    H
+  </text>
+  
+  <!-- Gradient for H -->
+  <defs>
+    <linearGradient id="grad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A64AC9"/>
+      <stop offset="100%" stop-color="#5C1A8B"/>
+    </linearGradient>
+  </defs>
+</svg>
