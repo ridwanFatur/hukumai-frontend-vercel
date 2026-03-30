@@ -131,7 +131,7 @@ export function useHomePageState() {
 		}
 	}
 
-	/** Websocket */
+	/** Websocket (TODO Delete this) */
 	const socketRef = useRef<WebSocket | null>(null)
 	const retryCountRef = useRef(0)
 	const maxRetries = 3
